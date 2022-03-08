@@ -35,23 +35,39 @@ def macd_calc(mk):
     signal = MACD.ewm(span=9, adjust=False).mean()
     macd_his = MACD - signal
     
-    x = macd_his.to_numpy()
-    orden = ""
+#----obtener lista de maximos macd---------------
+    x = macd_his.to_numpy()   
+    macd_max = []
+    for e in range(1, x.size - 1):
+       if x[e] > x[e-1] and x[e] > x[e+1]:
+         macd_max.append(e)
+#-------------------------------------------------    
     
-    macd_max = argrelextrema(x, np.greater)
+    
     last_max_date = mk.index[macd_max][-1]
     print(last_max_date)
     dif_max =((datetime.now() - last_max_date)).days
     print (f' diferencia maximo : {dif_max}')
       
+#----obtener lista de minimos macd---------------    
+    macd_min = [] 
+    for e in range(1, x.size - 1):
+       if x[e] < x[e-1] and x[e] < x[e+1]:
+         macd_min.append(e)
+#-------------------------------------------------    
     
-    macd_min = argrelextrema(x, np.less)
+    
+    
+    
+    
+    
+    
     last_min_date = mk.index[macd_min][-1]
     print(last_min_date)
     dif_min =((datetime.now() - last_min_date)).days
     print (f' diferencia minimo : {dif_min}')
     
-    
+    orden = ""
     if dif_max <= 4 and  dif_max < dif_min:
         orden = 'venda'
         
