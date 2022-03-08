@@ -3,8 +3,6 @@
 import yfinance as yf
 import pandas as pd
 import numpy as np
-import talib as ta
-from scipy.signal import argrelextrema
 from datetime import datetime
 
 BA_GRAL= ['MOLI.BA','LONG.BA', 'AGRO.BA', 'METR.BA', 'BOLT.BA', 'AUSO.BA', 'DGCU2.BA',
