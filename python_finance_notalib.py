@@ -1,4 +1,3 @@
-#commit
 
 import yfinance as yf
 import pandas as pd
@@ -17,16 +16,20 @@ BA = ['ALUA.BA', 'BMA.BA', 'BYMA.BA','CEPU.BA', 'COME.BA', 'CRES.BA', 'CVH.BA',
 
 tabla= pd.DataFrame()
 tabla_gral= pd.DataFrame()
+BAdownl = yf.download(BA, period='3mo')
+BAdownl = BAdownl['Close']
 
+BA_GRALdownl = yf.download(BA_GRAL, period='3mo')
+BA_GRALdownl = BA_GRALdownl['Close']
 
 
 def macd_calc(mk):
 #    mk['macd'], mk['macd_signal'],mk['macd_hist'] = ta.MACD(mk['Close'], fastperiod=12, slowperiod=26, signalperiod=9)
 
     ## Calculate the Short Term Exponential Moving Average
-    ShortEMA = mk.Close.ewm(span=12, adjust=False).mean()
+    ShortEMA = mk.ewm(span=12, adjust=False).mean()
     # Calculate the Long Term Exponential Moving Average
-    LongEMA = mk.Close.ewm(span=26, adjust=False).mean()
+    LongEMA = mk.ewm(span=26, adjust=False).mean()
     # Calculate the Moving Average Convergence/Divergence (MACD)
     MACD = ShortEMA - LongEMA
    #Calcualte the signal line
@@ -54,11 +57,7 @@ def macd_calc(mk):
          macd_min.append(e)
 #-------------------------------------------------    
     
-    
-    
-    
-    
-    
+     
     
     last_min_date = mk.index[macd_min][-1]
     print(last_min_date)
@@ -78,17 +77,19 @@ def macd_calc(mk):
     
 
 
-for i in BA:
-    mk = yf.download(i, period='6mo')
-    resultado = macd_calc(mk)
-    tabla = tabla.append({'stock':i, 'ultimo max':resultado[0], 'max pasados': resultado[1],
-                          'ultimo min':resultado[2], 'min pasados':resultado[3], 'orden': resultado[4] },  ignore_index=True)
-
-tabla.to_csv('tabla.csv')
+# =============================================================================
+# for i in BA:
+#     mk = BAdownl[i]
+#     resultado = macd_calc(mk)
+#     tabla = tabla.append({'stock':i, 'ultimo max':resultado[0], 'max pasados': resultado[1],
+#                           'ultimo min':resultado[2], 'min pasados':resultado[3], 'orden': resultado[4] },  ignore_index=True)
+# 
+# tabla.to_csv('tabla.csv')
+# =============================================================================
 
 
 for i in BA_GRAL:
-    mk = yf.download(i, period='6mo')
+    mk = BA_GRALdownl[i]
     resultado = macd_calc(mk)
     tabla_gral = tabla_gral.append({'stock':i, 'ultimo max':resultado[0], 'max pasados': resultado[1],
                           'ultimo min':resultado[2], 'min pasados':resultado[3], 'orden': resultado[4] },  ignore_index=True)
